@@ -14,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -105,6 +106,8 @@ public class WaitDialog extends BaseDialog {
     private ProgressView progress;
     private TextView txtInfo;
     
+    private KongzueDialogHelper kongzueDialogHelper;
+    
     public void showDialog() {
         if (customTextInfo == null) {
             customTextInfo = tipTextInfo;
@@ -119,7 +122,7 @@ public class WaitDialog extends BaseDialog {
             case THEME_LIGHT:
                 builder = new AlertDialog.Builder(context, R.style.lightMode);
                 bkgResId = R.drawable.rect_light;
-                blur_front_color = Color.argb(blur_alpha - 50, 255, 255, 255);
+                blur_front_color = Color.argb(blur_alpha, 255, 255, 255);
                 font_color = Color.rgb(0, 0, 0);
                 break;
             default:
@@ -132,21 +135,21 @@ public class WaitDialog extends BaseDialog {
         
         alertDialog = builder.create();
         
-        if (getDialogLifeCycleListener() != null)
-            getDialogLifeCycleListener().onCreate(alertDialog);
+        
+        getDialogLifeCycleListener().onCreate(alertDialog);
         if (isCanCancel) alertDialog.setCanceledOnTouchOutside(true);
         
         FragmentManager fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
-        KongzueDialogHelper kongzueDialogHelper = new KongzueDialogHelper().setAlertDialog(alertDialog, new OnDismissListener() {
+        kongzueDialogHelper = new KongzueDialogHelper().setAlertDialog(alertDialog, new OnDismissListener() {
             @Override
             public void onDismiss() {
                 dialogList.remove(waitDialog);
                 if (boxProgress != null) boxProgress.removeAllViews();
                 if (boxBkg != null) boxBkg.removeAllViews();
-                if (getDialogLifeCycleListener() != null) {
-                    getDialogLifeCycleListener().onDismiss();
-                    alertDialog = null;
-                }
+                
+                getDialogLifeCycleListener().onDismiss();
+                alertDialog = null;
+                getOnDismissListener().onDismiss();
             }
         });
         
@@ -181,20 +184,23 @@ public class WaitDialog extends BaseDialog {
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                     blur.setLayoutParams(params);
                     blur.setOverlayColor(blur_front_color);
-                    
+                    boxBkg.addView(blur, 0, params);
+                }
+            });
+            boxBkg.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
                     ViewGroup.LayoutParams boxBkgLayoutParams = boxBkg.getLayoutParams();
                     boxBkgLayoutParams.width = boxInfo.getWidth();
                     boxBkgLayoutParams.height = boxInfo.getHeight();
                     boxBkg.setLayoutParams(boxBkgLayoutParams);
-                    
-                    boxBkg.addView(blur, 0, params);
                 }
             });
         } else {
             boxBkg.setBackgroundResource(bkgResId);
         }
         
-        if (tip!=null && !tip.isEmpty()) {
+        if (tip != null && !tip.isEmpty()) {
             txtInfo.setVisibility(View.VISIBLE);
             txtInfo.setText(tip);
         } else {
@@ -235,7 +241,7 @@ public class WaitDialog extends BaseDialog {
             }
         });
         
-        if (getDialogLifeCycleListener() != null) getDialogLifeCycleListener().onShow(alertDialog);
+        getDialogLifeCycleListener().onShow(alertDialog);
         
         kongzueDialogHelper.show(fragmentManager, "kongzueDialog");
         kongzueDialogHelper.setCancelable(isCanCancel);
@@ -243,11 +249,11 @@ public class WaitDialog extends BaseDialog {
     
     @Override
     public void doDismiss() {
-        if (alertDialog != null) alertDialog.dismiss();
+        if (kongzueDialogHelper != null) kongzueDialogHelper.dismissAllowingStateLoss();
     }
     
     public WaitDialog setCanCancel(boolean canCancel) {
-        if (alertDialog != null) alertDialog.setCancelable(canCancel);
+        if (kongzueDialogHelper != null) kongzueDialogHelper.setCancelable(canCancel);
         return this;
     }
     

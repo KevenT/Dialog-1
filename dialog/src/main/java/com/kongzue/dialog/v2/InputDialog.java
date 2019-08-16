@@ -110,6 +110,8 @@ public class InputDialog extends ModalBaseDialog {
     
     int blur_front_color;
     
+    private KongzueDialogHelper kongzueDialogHelper;
+    
     public void showDialog() {
         if (customTitleTextInfo == null) {
             customTitleTextInfo = dialogTitleTextInfo;
@@ -169,24 +171,24 @@ public class InputDialog extends ModalBaseDialog {
         
         alertDialog = builder.create();
         alertDialog.setView(new EditText(context));
-        if (getDialogLifeCycleListener() != null)
-            getDialogLifeCycleListener().onCreate(alertDialog);
+        getDialogLifeCycleListener().onCreate(alertDialog);
         if (isCanCancel) alertDialog.setCanceledOnTouchOutside(true);
-      
+        
         View rootView;
-        FragmentManager fragmentManager = ((AppCompatActivity)context).getSupportFragmentManager();
-        KongzueDialogHelper kongzueDialogHelper = new KongzueDialogHelper().setAlertDialog(alertDialog, new OnDismissListener() {
+        FragmentManager fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
+        kongzueDialogHelper = new KongzueDialogHelper().setAlertDialog(alertDialog, new OnDismissListener() {
             @Override
             public void onDismiss() {
                 dialogList.remove(inputDialog);
                 if (bkg != null) bkg.removeAllViews();
-                if (alertDialog != null) alertDialog.dismiss();
+                if (kongzueDialogHelper != null) kongzueDialogHelper.dismissAllowingStateLoss();
                 if (customView != null) customView.removeAllViews();
                 if (onCancelButtonClickListener != null)
                     onCancelButtonClickListener.onClick(alertDialog, BUTTON_NEGATIVE);
-                if (getDialogLifeCycleListener() != null) getDialogLifeCycleListener().onDismiss();
+                getDialogLifeCycleListener().onDismiss();
+                getOnDismissListener().onDismiss();
                 isDialogShown = false;
-    
+                
                 if (!modalDialogList.isEmpty()) {
                     showNextModalDialog();
                 }
@@ -250,7 +252,7 @@ public class InputDialog extends ModalBaseDialog {
                 btnSelectNegative.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        alertDialog.dismiss();
+                        kongzueDialogHelper.dismissAllowingStateLoss();
                         if (onCancelButtonClickListener != null)
                             onCancelButtonClickListener.onClick(alertDialog, BUTTON_NEGATIVE);
                         onCancelButtonClickListener = null;
@@ -266,7 +268,7 @@ public class InputDialog extends ModalBaseDialog {
                     txtInput.setTextColor(Color.rgb(255, 255, 255));
                     txtInput.setBackgroundResource(R.drawable.editbox_bkg_dark);
                 }
-    
+                
                 useTextInfo(txtDialogTitle, customTitleTextInfo);
                 useTextInfo(txtDialogTip, customContentTextInfo);
                 useTextInfo(btnSelectNegative, customButtonTextInfo);
@@ -304,7 +306,7 @@ public class InputDialog extends ModalBaseDialog {
                 alertDialog.setButton(BUTTON_POSITIVE, okButtonCaption, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-        
+                    
                     }
                 });
                 alertDialog.setButton(BUTTON_NEGATIVE, cancelButtonCaption, onCancelButtonClickListener);
@@ -319,7 +321,7 @@ public class InputDialog extends ModalBaseDialog {
                 if (dialog_background_color != -1) {
                     alertDialog.getWindow().getDecorView().setBackgroundResource(dialog_background_color);
                 }
-    
+                
                 alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
                     public void onShow(DialogInterface dialog) {
@@ -330,7 +332,7 @@ public class InputDialog extends ModalBaseDialog {
                                     onOkButtonClickListener.onClick(alertDialog, txtInput.getText().toString());
                                 onCancelButtonClickListener = null;
                                 
-                                if (txtInput!=null){
+                                if (txtInput != null) {
                                     txtInput.setFocusable(true);
                                     txtInput.setFocusableInTouchMode(true);
                                     txtInput.requestFocus();
@@ -452,7 +454,7 @@ public class InputDialog extends ModalBaseDialog {
                 break;
         }
         isDialogShown = true;
-        if (getDialogLifeCycleListener() != null) getDialogLifeCycleListener().onShow(alertDialog);
+        getDialogLifeCycleListener().onShow(alertDialog);
         kongzueDialogHelper.setCancelable(isCanCancel);
     }
     
@@ -466,18 +468,18 @@ public class InputDialog extends ModalBaseDialog {
         if (textInfo.getGravity() != -1) {
             textView.setGravity(textInfo.getGravity());
         }
-        Typeface font = Typeface.create(Typeface.SANS_SERIF, textInfo.isBold()?Typeface.BOLD:Typeface.NORMAL);
+        Typeface font = Typeface.create(Typeface.SANS_SERIF, textInfo.isBold() ? Typeface.BOLD : Typeface.NORMAL);
         textView.setTypeface(font);
     }
     
     @Override
     public void doDismiss() {
-        if (alertDialog != null) alertDialog.dismiss();
+        if (kongzueDialogHelper != null) kongzueDialogHelper.dismissAllowingStateLoss();
     }
     
     public InputDialog setCanCancel(boolean canCancel) {
         isCanCancel = canCancel;
-        if (alertDialog != null) alertDialog.setCancelable(canCancel);
+        if (kongzueDialogHelper != null) kongzueDialogHelper.setCancelable(canCancel);
         return this;
     }
     

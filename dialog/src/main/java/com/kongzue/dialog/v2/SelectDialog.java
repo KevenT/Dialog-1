@@ -108,6 +108,8 @@ public class SelectDialog extends ModalBaseDialog {
     
     int blur_front_color;
     
+    private KongzueDialogHelper kongzueDialogHelper;
+    
     public void showDialog() {
         if (customTitleTextInfo == null) {
             customTitleTextInfo = dialogTitleTextInfo;
@@ -166,19 +168,19 @@ public class SelectDialog extends ModalBaseDialog {
         }
         
         alertDialog = builder.create();
-        if (getDialogLifeCycleListener() != null)
-            getDialogLifeCycleListener().onCreate(alertDialog);
+        getDialogLifeCycleListener().onCreate(alertDialog);
         if (isCanCancel) alertDialog.setCanceledOnTouchOutside(true);
         
         View rootView;
-        FragmentManager fragmentManager = ((AppCompatActivity)context).getSupportFragmentManager();
-        KongzueDialogHelper kongzueDialogHelper = new KongzueDialogHelper().setAlertDialog(alertDialog, new OnDismissListener() {
+        FragmentManager fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
+        kongzueDialogHelper = new KongzueDialogHelper().setAlertDialog(alertDialog, new OnDismissListener() {
             @Override
             public void onDismiss() {
                 dialogList.remove(selectDialog);
                 if (bkg != null) bkg.removeAllViews();
                 if (customView != null) customView.removeAllViews();
-                if (getDialogLifeCycleListener() != null) getDialogLifeCycleListener().onDismiss();
+                getDialogLifeCycleListener().onDismiss();
+                getOnDismissListener().onDismiss();
                 isDialogShown = false;
                 context = null;
                 
@@ -225,7 +227,7 @@ public class SelectDialog extends ModalBaseDialog {
                 btnSelectPositive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        alertDialog.dismiss();
+                        kongzueDialogHelper.dismissAllowingStateLoss();
                         if (onOkButtonClickListener != null)
                             onOkButtonClickListener.onClick(alertDialog, BUTTON_POSITIVE);
                     }
@@ -234,7 +236,7 @@ public class SelectDialog extends ModalBaseDialog {
                 btnSelectNegative.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        alertDialog.dismiss();
+                        kongzueDialogHelper.dismissAllowingStateLoss();
                         if (onCancelButtonClickListener != null)
                             onCancelButtonClickListener.onClick(alertDialog, BUTTON_NEGATIVE);
                     }
@@ -306,7 +308,7 @@ public class SelectDialog extends ModalBaseDialog {
                 btnSelectPositive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        alertDialog.dismiss();
+                        kongzueDialogHelper.dismissAllowingStateLoss();
                         if (onOkButtonClickListener != null)
                             onOkButtonClickListener.onClick(alertDialog, BUTTON_POSITIVE);
                     }
@@ -316,7 +318,7 @@ public class SelectDialog extends ModalBaseDialog {
                 btnSelectNegative.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        alertDialog.dismiss();
+                        kongzueDialogHelper.dismissAllowingStateLoss();
                         if (onCancelButtonClickListener != null)
                             onCancelButtonClickListener.onClick(alertDialog, BUTTON_NEGATIVE);
                     }
@@ -362,7 +364,7 @@ public class SelectDialog extends ModalBaseDialog {
                 break;
         }
         isDialogShown = true;
-        if (getDialogLifeCycleListener() != null) getDialogLifeCycleListener().onShow(alertDialog);
+        getDialogLifeCycleListener().onShow(alertDialog);
         kongzueDialogHelper.setCancelable(isCanCancel);
     }
     
@@ -376,18 +378,18 @@ public class SelectDialog extends ModalBaseDialog {
         if (textInfo.getGravity() != -1) {
             textView.setGravity(textInfo.getGravity());
         }
-        Typeface font = Typeface.create(Typeface.SANS_SERIF, textInfo.isBold()?Typeface.BOLD:Typeface.NORMAL);
+        Typeface font = Typeface.create(Typeface.SANS_SERIF, textInfo.isBold() ? Typeface.BOLD : Typeface.NORMAL);
         textView.setTypeface(font);
     }
     
     @Override
     public void doDismiss() {
-        if (alertDialog != null) alertDialog.dismiss();
+        if (kongzueDialogHelper != null) kongzueDialogHelper.dismissAllowingStateLoss();
     }
     
     public SelectDialog setCanCancel(boolean canCancel) {
         isCanCancel = canCancel;
-        if (alertDialog != null) alertDialog.setCancelable(canCancel);
+        if (kongzueDialogHelper != null) kongzueDialogHelper.setCancelable(canCancel);
         return this;
     }
     

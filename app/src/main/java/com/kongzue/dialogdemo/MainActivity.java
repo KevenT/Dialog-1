@@ -382,12 +382,12 @@ public class MainActivity extends AppCompatActivity {
                 list.add("菜单1");
                 list.add("菜单2");
                 list.add("菜单3");
-                BottomMenu.show(me, list, new OnMenuItemClickListener() {
+                BottomMenu.build(me, list, new OnMenuItemClickListener() {
                     @Override
                     public void onClick(String text, int index) {
                         Toast.makeText(me, "菜单 " + text + " 被点击了", SHOW_TIME_SHORT).show();
                     }
-                }, true);
+                }, true,"取消").showDialog();
             }
         });
         
@@ -561,7 +561,7 @@ public class MainActivity extends AppCompatActivity {
         btnPsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WaitDialog.show(me, null);
+                WaitDialog.show(me, "请稍候...");
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

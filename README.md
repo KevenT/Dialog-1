@@ -2,10 +2,10 @@
 献给要求我们安卓照着苹果设计稿做开发的产品们（手动滑稽
 
 <a href="https://github.com/kongzue/Dialog/">
-<img src="https://img.shields.io/badge/Kongzue%20Dialog-2.4.8-green.svg" alt="Kongzue Dialog">
+<img src="https://img.shields.io/badge/Kongzue%20Dialog-2.5.2-green.svg" alt="Kongzue Dialog">
 </a> 
-<a href="https://bintray.com/myzchh/maven/dialog/2.4.8/link">
-<img src="https://img.shields.io/badge/Maven-2.4.8-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/dialog/2.5.2/link">
+<img src="https://img.shields.io/badge/Maven-2.5.2-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -14,19 +14,26 @@
 <img src="https://img.shields.io/badge/Homepage-Kongzue.com-brightgreen.svg" alt="Homepage">
 </a>
 
+# 新版本V3 🆙 
+本库即将停止新功能的更新，请尽快升级使用 V3版本。
+
+Kongzue Dialog V3 现已上传正式版本，请前往 <https://github.com/kongzue/DialogV3> 查看。
+
+停止更新后，V2版本会继续修复bug，但不会增加任何新的功能。
+
+# V2版本
+
 空祖家的对话框2.0拥有提供最简单的调用方式以实现消息框、选择框、输入框、等待提示、警告提示、完成提示、错误提示等弹出样式。以下是目前包含的所有对话框样式预览图：
 
 ![Kongzue's Dialog](https://github.com/kongzue/Res/raw/master/app/src/main/res/mipmap-xxxhdpi/Kongzue%20Dialog%202.0.png)
 
-试用版可以前往 http://fir.im/kDialog 下载
-
-![Kongzue's Dialog Demo](https://github.com/kongzue/Res/raw/master/app/src/main/res/mipmap-xxxhdpi/KongzueDialogDemoDownload.png)
+试用版可以前往 <https://fir.im/dialogV2> 下载
 
 本例中，包含DialogDemo（Dialog/app/）是对话框的演示项目源代码，以及Library库（Dialog/dialog/）是封装的空祖家对话框的源代码。
 
-项目托管的Maven仓库在https://bintray.com/myzchh/maven/dialog
+项目托管的Maven仓库在<https://bintray.com/myzchh/maven/dialog>
 
-本项目遵循Apache-2.0开源协议，具体可参考：http://www.opensource.org/licenses/apache2.0.php
+本项目遵循Apache-2.0开源协议，具体可参考：<http://www.opensource.org/licenses/apache2.0.php>
 
 # 目录
 
@@ -81,14 +88,14 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.dialog</groupId>
   <artifactId>dialog</artifactId>
-  <version>2.4.8</version>
+  <version>2.5.2</version>
   <type>pom</type>
 </dependency>
 ```
 Gradle：
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.dialog:dialog:2.4.8'
+implementation 'com.kongzue.dialog:dialog:2.5.2'
 ```
 
 部分 Material 组件需要依赖：
@@ -96,6 +103,8 @@ implementation 'com.kongzue.dialog:dialog:2.4.8'
 implementation 'com.android.support:appcompat-v7:28.0.0'
 implementation 'com.android.support:design:28.0.0'
 ```
+
+⚠现有 Android X 版本提供，具体请转至 <a href="https://github.com/kongzue/Dialog/tree/AndroidX">Android X分支</a> 查看。
 
 此外，
 
@@ -661,6 +670,24 @@ limitations under the License.
 ```
 
 ## 更新日志：
+v2.5.2:
+- 用 dismissAllowingStateLoss() 替换之前使用的 dismiss();
+
+v2.5.1:
+- 修复因文字过长，TextView 宽度计算 bug 导致 WaitDialog、TipDialog 文字显示超出区域的问题；
+
+v2.4.9:
+- 修复部分bug；
+- 新增 setOnDismissListener(...) 可单独设置对话框关闭事件；
+
+(beta)v2.4.8.2:
+- 迁移至 Android X（已回档，要使用Android X版本请切换分支拉取项目）；
+
+&emsp;&emsp;注意，此版本尚处测试阶段，且不确定若出现重大 Bug 反档。
+
+(beta)v2.4.8.1:
+- 修复了其他各组件 setCanCancel(boolean) 无效的bug；
+
 v2.4.8:
 - CustomDialog 支持使用 build(...) 方法创建，并修复了 setCanCancel(boolean) 无效的bug；
 - CustomDialog 的 BindView 增加提供参数 CustomDialog 以简化进行相应的业务处理；
@@ -729,7 +756,7 @@ v2.3.7：
 - 修改了 DialogSettings 中对于各组件文字样式的设置方式，具体请参照章节：<a href="#附加功能">附加功能</a>；
 
 v2.3.6：
-- 新增 Pop 提示阴影效果（阴影组件来源 @GIGAMOLE(https://github.com/Devlight/ShadowLayout) ，开源协议：Apache License 2.0）；
+- 新增 Pop 提示阴影效果（阴影组件来源 @GIGAMOLE(<https://github.com/Devlight/ShadowLayout>) ，开源协议：Apache License 2.0）；
 - InputDialog 新增 setInputInfo(InputInfo) 方法，对输入框进行设置，具体请查看章节：<a href="#调用输入对话框">调用输入对话框</a>；
 - 修复其他 bug；
 

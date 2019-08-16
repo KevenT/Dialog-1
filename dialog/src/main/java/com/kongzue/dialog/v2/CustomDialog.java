@@ -90,7 +90,6 @@ public class CustomDialog extends ModalBaseDialog {
         alertDialog = builder.create();
         alertDialog.setView(rootView);
         
-        if (getDialogLifeCycleListener() != null)
             getDialogLifeCycleListener().onCreate(alertDialog);
         
         if (isCanCancel) alertDialog.setCanceledOnTouchOutside(true);
@@ -101,7 +100,8 @@ public class CustomDialog extends ModalBaseDialog {
             public void onDismiss() {
                 dialogList.remove(customDialog);
                 rootView = null;
-                if (getDialogLifeCycleListener() != null) getDialogLifeCycleListener().onDismiss();
+                getDialogLifeCycleListener().onDismiss();
+                getOnDismissListener().onDismiss();
                 isDialogShown = false;
                 context = null;
                 
@@ -111,7 +111,6 @@ public class CustomDialog extends ModalBaseDialog {
             }
         });
         
-        if (getDialogLifeCycleListener() != null)
             getDialogLifeCycleListener().onShow(alertDialog);
         
         if (bindView != null) bindView.onBind(this, rootView);
@@ -122,12 +121,11 @@ public class CustomDialog extends ModalBaseDialog {
     
     @Override
     public void doDismiss() {
-        if (alertDialog != null) alertDialog.dismiss();
+        if (kongzueDialogHelper != null) kongzueDialogHelper.dismissAllowingStateLoss();
     }
     
     public CustomDialog setCanCancel(boolean canCancel) {
         isCanCancel = canCancel;
-        if (alertDialog != null) alertDialog.setCancelable(canCancel);
         if (kongzueDialogHelper!=null) kongzueDialogHelper.setCancelable(isCanCancel);
         return this;
     }
